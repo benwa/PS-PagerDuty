@@ -31,7 +31,9 @@ jobs:
         wget -q https://raw.githubusercontent.com/PagerDuty/api-schema/main/reference/events-v2/openapiv3.json
         
     - name: Build PowerShell module
-      run: autorest --powershell --input-file:openapiv3.json
+      run: |
+        autorest --powershell --input-file:openapiv3.json
+        ./generated/build-module.ps1
     
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
