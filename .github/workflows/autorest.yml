@@ -1,0 +1,40 @@
+name: AutoRest
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 14.x
+        cache: npm
+        
+    - name: Install dependencies
+    - run: npm install -g autorest
+    - run: |
+        sudo apt update
+        sudo apt install -y software-properties-common
+        source /etc/os-release
+        wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+        sudo dpkg -i packages-microsoft-prod.deb
+        sudo apt update
+        sudo apt install -y powershell
+    - run: sudo apt install -y dotnet-sdk-8.0
+    
+    - name: Setup AutoRest
+    - run: |
+        autorest --reset
+        wget -q https://raw.githubusercontent.com/PagerDuty/api-schema/main/reference/events-v2/openapiv3.json
+        
+    - name: Build PowerShell module
+    - run: autorest --powershell --input-file:openapiv3.json
+    
+    - name: Upload aritifact
+      uses: actions/upload-artiface@v4
+      with:
+        path: generated/
