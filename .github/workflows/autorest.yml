@@ -27,7 +27,7 @@ jobs:
     - run: sudo apt install -y dotnet-sdk-8.0
     
     - name: Setup AutoRest
-    - run: |
+      run: |
         autorest --reset
         wget -q https://raw.githubusercontent.com/PagerDuty/api-schema/main/reference/events-v2/openapiv3.json
         
