@@ -14,7 +14,6 @@ jobs:
         node-version: 14.x
         cache: npm
         
-    - name: Install dependencies
     - run: npm install -g autorest
     - run: |
         sudo apt update
@@ -22,6 +21,7 @@ jobs:
         source /etc/os-release
         wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
         sudo dpkg -i packages-microsoft-prod.deb
+    - run: |
         sudo apt update
         sudo apt install -y powershell
     - run: sudo apt install -y dotnet-sdk-8.0
@@ -32,9 +32,9 @@ jobs:
         wget -q https://raw.githubusercontent.com/PagerDuty/api-schema/main/reference/events-v2/openapiv3.json
         
     - name: Build PowerShell module
-    - run: autorest --powershell --input-file:openapiv3.json
+      run: autorest --powershell --input-file:openapiv3.json
     
-    - name: Upload aritifact
+    - name: Archive build artifacts
       uses: actions/upload-artiface@v4
       with:
         path: generated/
